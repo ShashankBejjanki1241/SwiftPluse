@@ -1,0 +1,116 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    setup_ci if is_ci
+    
+    # Ensure we're on the right branch
+    ensure_git_branch(branch: 'main')
+    
+    # Increment build number
+    increment_build_number(xcodeproj: "SwiftPulse.xcodeproj")
+    
+    # Build the app
+    build_ios_app(
+      scheme: "SwiftPulse",
+      export_method: "app-store",
+      configuration: "Release",
+      clean: true
+    )
+    
+    # Upload to TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+    
+    # Commit and push changes
+    commit_version_bump(
+      message: "Bump build number [skip ci]",
+      xcodeproj: "SwiftPulse.xcodeproj"
+    )
+    push_to_git_remote
+  end
+
+  desc "Build the app for testing"
+  lane :build do
+    setup_ci if is_ci
+    
+    build_ios_app(
+      scheme: "SwiftPulse",
+      configuration: "Debug",
+      clean: true
+    )
+  end
+
+  desc "Run tests"
+  lane :test do
+    setup_ci if is_ci
+    
+    run_tests(
+      scheme: "SwiftPulse",
+      destination: "platform=iOS Simulator,name=iPhone 15,OS=latest",
+      clean: true
+    )
+  end
+
+  desc "Deploy a new version to the App Store"
+  lane :release do
+    setup_ci if is_ci
+    
+    # Ensure we're on the right branch
+    ensure_git_branch(branch: 'main')
+    
+    # Ensure clean working directory
+    ensure_git_status_clean
+    
+    # Increment version number
+    increment_version_number(
+      xcodeproj: "SwiftPulse.xcodeproj",
+      version_number_type: "patch"
+    )
+    
+    # Build the app
+    build_ios_app(
+      scheme: "SwiftPulse",
+      export_method: "app-store",
+      configuration: "Release",
+      clean: true
+    )
+    
+    # Upload to App Store Connect
+    upload_to_app_store(
+      force: true,
+      skip_metadata: true,
+      skip_screenshots: true
+    )
+    
+    # Commit and push changes
+    commit_version_bump(
+      message: "Release version [skip ci]",
+      xcodeproj: "SwiftPulse.xcodeproj"
+    )
+    push_to_git_remote
+    
+    # Add git tag
+    add_git_tag(
+      tag: "v#{get_version_number(xcodeproj: 'SwiftPulse.xcodeproj')}"
+    )
+    push_git_tags
+  end
+end

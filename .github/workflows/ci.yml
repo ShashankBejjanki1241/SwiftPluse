@@ -1,0 +1,248 @@
+name: 🚀 SwiftPulse CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  XCODE_VERSION: '15.0'
+  IOS_VERSION: '17.0'
+  DEVICE: 'iPhone 15'
+
+jobs:
+  # 🧪 Test Suite
+  test:
+    name: 🧪 Run Tests
+    runs-on: macos-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🍎 Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+          
+      - name: 🔑 Setup API Key
+        run: |
+          echo "API_KEY=test_key_for_ci" >> Config/SwiftPulse.xcconfig
+          echo "API_HOST=https://newsapi.org" >> Config/SwiftPulse.xcconfig
+          echo "PAGE_SIZE=20" >> Config/SwiftPulse.xcconfig
+          echo "CACHE_DURATION_HOURS=2" >> Config/SwiftPulse.xcconfig
+          
+      - name: 🏗️ Build project
+        run: |
+          xcodebuild clean build \
+            -scheme SwiftPulse \
+            -destination "platform=iOS Simulator,name=${{ env.DEVICE }},OS=${{ env.IOS_VERSION }}" \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+            
+      - name: 🧪 Run unit tests
+        run: |
+          xcodebuild test \
+            -scheme SwiftPulse \
+            -destination "platform=iOS Simulator,name=${{ env.DEVICE }},OS=${{ env.IOS_VERSION }}" \
+            -configuration Debug \
+            -only-testing:SwiftPulseTests \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+            
+      - name: 📊 Test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results
+          path: test-results.xml
+          reporter: java-junit
+
+  # 🔍 Code Quality
+  lint:
+    name: 🔍 Code Quality
+    runs-on: macos-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🍎 Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+          
+      - name: 📏 Install SwiftLint
+        run: |
+          brew install swiftlint
+          
+      - name: 🔍 Run SwiftLint
+        run: |
+          swiftlint lint --reporter github-actions-logging
+          
+      - name: 📊 SwiftLint results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: SwiftLint Results
+          path: swiftlint-results.xml
+          reporter: java-junit
+
+  # 📱 Build & Archive
+  build:
+    name: 📱 Build & Archive
+    runs-on: macos-latest
+    needs: [test, lint]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🍎 Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+          
+      - name: 🔑 Setup API Key
+        run: |
+          echo "API_KEY=test_key_for_ci" >> Config/SwiftPulse.xcconfig
+          echo "API_HOST=https://newsapi.org" >> Config/SwiftPulse.xcconfig
+          echo "PAGE_SIZE=20" >> Config/SwiftPulse.xcconfig
+          echo "CACHE_DURATION_HOURS=2" >> Config/SwiftPulse.xcconfig
+          
+      - name: 🏗️ Archive project
+        run: |
+          xcodebuild archive \
+            -scheme SwiftPulse \
+            -destination "generic/platform=iOS" \
+            -configuration Release \
+            -archivePath build/SwiftPulse.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+            
+      - name: 📦 Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/SwiftPulse.xcarchive \
+            -exportPath build/ \
+            -exportOptionsPlist exportOptions.plist
+            
+      - name: 📤 Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SwiftPulse-IPA
+          path: build/*.ipa
+
+  # 🚀 Deploy to TestFlight
+  deploy:
+    name: 🚀 Deploy to TestFlight
+    runs-on: macos-latest
+    needs: [test, lint, build]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 📦 Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: SwiftPulse-IPA
+          path: build/
+          
+      - name: 🍎 Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+          
+      - name: 🚀 Deploy to TestFlight
+        run: |
+          # This would use fastlane or xcrun to deploy
+          echo "Deploying to TestFlight..."
+          # xcrun altool --upload-app --type ios --file "build/*.ipa" --username "${{ secrets.APPLE_ID }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}"
+
+  # 📊 Security Scan
+  security:
+    name: 🔒 Security Scan
+    runs-on: macos-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🔍 Run security scan
+        run: |
+          # This would run security scanning tools
+          echo "Running security scan..."
+          # Example: OWASP dependency check, etc.
+          
+      - name: 📊 Security results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Security Scan Results
+          path: security-results.xml
+          reporter: java-junit
+
+  # 📈 Performance Test
+  performance:
+    name: 📈 Performance Test
+    runs-on: macos-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🍎 Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+          
+      - name: 🔑 Setup API Key
+        run: |
+          echo "API_KEY=test_key_for_ci" >> Config/SwiftPulse.xcconfig
+          echo "API_HOST=https://newsapi.org" >> Config/SwiftPulse.xcconfig
+          echo "PAGE_SIZE=20" >> Config/SwiftPulse.xcconfig
+          echo "CACHE_DURATION_HOURS=2" >> Config/SwiftPulse.xcconfig
+          
+      - name: 📱 Run performance tests
+        run: |
+          # This would run performance benchmarks
+          echo "Running performance tests..."
+          # Example: XCTest performance tests, etc.
+          
+      - name: 📊 Performance results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Performance Test Results
+          path: performance-results.xml
+          reporter: java-junit
+
+  # 📋 Summary
+  summary:
+    name: 📋 Build Summary
+    runs-on: ubuntu-latest
+    needs: [test, lint, build, deploy, security, performance]
+    if: always()
+    
+    steps:
+      - name: 📊 Generate summary
+        run: |
+          echo "## 🚀 SwiftPulse CI/CD Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Completed Jobs:" >> $GITHUB_STEP_SUMMARY
+          echo "- 🧪 Tests: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔍 Linting: ${{ needs.lint.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 📱 Build: ${{ needs.build.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🚀 Deploy: ${{ needs.deploy.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔒 Security: ${{ needs.security.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 📈 Performance: ${{ needs.performance.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Overall Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

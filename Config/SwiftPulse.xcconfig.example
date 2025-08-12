@@ -1,0 +1,14 @@
+// SwiftPulse Configuration Example
+// Copy this file to SwiftPulse.xcconfig and add your actual API key
+
+// API Configuration
+API_HOST = https://newsapi.org
+API_KEY = your_actual_api_key_here
+PAGE_SIZE = 20
+CACHE_DURATION_HOURS = 2
+
+// To get an API key:
+// 1. Visit https://newsapi.org/
+// 2. Sign up for a free account
+// 3. Copy your API key
+// 4. Replace 'your_actual_api_key_here' with your real key
