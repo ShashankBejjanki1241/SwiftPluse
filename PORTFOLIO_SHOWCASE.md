@@ -252,10 +252,9 @@ struct FeatureFlags {
 ## 📞 Contact & Collaboration
 
 ### **Get in Touch**
-- **GitHub**: [Your GitHub Profile]
-- **LinkedIn**: [Your LinkedIn Profile]
-- **Portfolio**: [Your Portfolio Website]
-- **Email**: [Your Email Address]
+- **GitHub**: [ShashankBejjanki1241](https://github.com/ShashankBejjanki1241)
+- **Portfolio**: [GitHub Portfolio](https://github.com/ShashankBejjanki1241)
+- **Email**: shashank.bejj1241@gmail.com
 
 ### **Contribute to SwiftPulse**
 - **Fork the Repository** - Start contributing today

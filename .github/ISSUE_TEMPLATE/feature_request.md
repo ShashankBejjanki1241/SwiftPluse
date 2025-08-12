@@ -30,3 +30,5 @@ How should this feature be tested? What scenarios should be covered?
 ---
 
 **Thank you for helping improve SwiftPulse!** 🗞️💓
+
+**Maintainer**: Shashank B (ShashankBejjanki1241) - shashank.bejj1241@gmail.com

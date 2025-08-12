@@ -39,3 +39,5 @@ If you have suggestions on a fix for the bug, please describe it.
 ---
 
 **Thank you for helping improve SwiftPulse!** 🗞️💓
+
+**Maintainer**: Shashank B (ShashankBejjanki1241) - shashank.bejj1241@gmail.com

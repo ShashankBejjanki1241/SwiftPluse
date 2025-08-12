@@ -80,3 +80,5 @@ Assets.xcassets/AppIcon.appiconset/
 4. Verify icon displays correctly on device
 
 Your icon design is perfect for a news app - the document and heartbeat line clearly communicate the app's purpose while maintaining a modern, professional appearance!
+
+**Created by Shashank B (ShashankBejjanki1241)** 🗞️💓

@@ -216,9 +216,11 @@ Any other information
 - [iOS Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
 
 ### **Contact**
-- GitHub Issues for bugs and features
-- GitHub Discussions for questions
-- Pull Request reviews for code feedback
+- **Maintainer**: Shashank B (ShashankBejjanki1241)
+- **Email**: shashank.bejj1241@gmail.com
+- **GitHub Issues** for bugs and features
+- **GitHub Discussions** for questions
+- **Pull Request reviews** for code feedback
 
 ## 🙏 Recognition
 

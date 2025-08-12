@@ -42,7 +42,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/SwiftPulse.git
+   git clone https://github.com/ShashankBejjanki1241/SwiftPluse.git
    cd SwiftPulse
    ```
 
@@ -207,10 +207,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **Developer**: [Your Name]
-- **Email**: [your.email@example.com]
-- **LinkedIn**: [Your LinkedIn]
-- **Portfolio**: [Your Portfolio]
+- **Developer**: Shashank B
+- **Email**: shashank.bejj1241@gmail.com
+- **GitHub**: [ShashankBejjanki1241](https://github.com/ShashankBejjanki1241)
+- **Portfolio**: [GitHub Portfolio](https://github.com/ShashankBejjanki1241)
 
 ---
 

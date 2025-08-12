@@ -240,4 +240,4 @@ User Interaction → View → ViewModel → Repository → Data Source
 
 ---
 
-This structure demonstrates professional iOS development practices and provides a solid foundation for a portfolio project. 🗞️💓
+This structure demonstrates professional iOS development practices and provides a solid foundation for a portfolio project by Shashank B (ShashankBejjanki1241). 🗞️💓

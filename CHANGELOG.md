@@ -148,4 +148,4 @@ For support and questions:
 
 ---
 
-*This changelog is maintained by the SwiftPulse development team.* 🗞️💓
+*This changelog is maintained by Shashank B (ShashankBejjanki1241).* 🗞️💓

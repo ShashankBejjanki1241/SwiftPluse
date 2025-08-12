@@ -50,3 +50,5 @@ Any additional information that reviewers should know about this pull request.
 ---
 
 **Thank you for contributing to SwiftPulse!** 🗞️💓
+
+**Maintainer**: Shashank B (ShashankBejjanki1241) - shashank.bejj1241@gmail.com

@@ -91,4 +91,6 @@ Assets.xcassets/
 - [ ] Icon displays correctly on device
 - [ ] Accent color appears throughout the app
 
-Your SwiftPulse icon design is perfect for a news app - the document represents content while the heartbeat line perfectly captures the "pulse" of real-time news updates! 🗞️💓
+Your SwiftPulse icon design is perfect for a news app - the document represents content while the heartbeat line perfectly captures the "pulse" of real-time news updates! 
+
+**Created by Shashank B (ShashankBejjanki1241)** 🗞️💓
